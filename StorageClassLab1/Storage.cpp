@@ -27,13 +27,14 @@ void Storage::updateProduct(const string_view name, Field updateField, const var
 	for (const auto& product : products) {
 		if (product->getName() == name) {
 			switch (updateField) {
-			case Field::Color:
+			using enum Field;
+			case Color:
 				product->setColor(get<string>(value));
 				break;
-			case Field::Price:
+			case Price:
 				product->setPrice(get<double>(value));
 				break;
-			case Field::Weight:
+			case Weight:
 				product->setWeight(get<double>(value));
 				break;
 			default:
@@ -91,7 +92,7 @@ void removeProduct(Storage& storage) {
 	storage.removeProduct(name);
 }
 
-void updateProduct(Storage& storage) {
+void updateProduct(const Storage& storage) {
 	string name;
 	string color;
 	double price;

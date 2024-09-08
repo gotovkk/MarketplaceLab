@@ -24,6 +24,6 @@ public:
 
 void addProduct(Storage& storage);
 void removeProduct(Storage& storage);
-void updateProduct(Storage& storage);
+void updateProduct(const Storage& storage);
 void showProducts(const Storage& storage);
 void findLowStockProducts(const Storage& storage);
