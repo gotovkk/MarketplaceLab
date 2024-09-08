@@ -1,70 +1,69 @@
 ﻿#include "Storage.h"
 using namespace std;
 
-void Storage::addProduct(const Product& product) {
-	for (auto& existProducts : products) {
-		if (existProducts.getName() == product.getName()) {
-			int newAmount = existProducts.getAmount() + product.getAmount();
-			existProducts.setAmount(newAmount);
+void Storage::addProduct(unique_ptr<Product> product) {
+	for (const auto& existProduct : products) {
+		if (existProduct->getName() == product->getName()) {
+			int newAmount = existProduct->getAmount() + product->getAmount();
+			existProduct->setAmount(newAmount);
 			return;
 		}
 	}
-	products.push_back(product);
+	products.push_back(move(product));
 }
 
 bool Storage::removeProduct(const string_view name) {
-	for (auto iter = products.begin(); iter != products.end(); iter++) {
-		if (iter->getName() == name) {
-			products.erase(iter);
-			return true;
-		}
+	auto iter = std::remove_if(products.begin(), products.end(),
+		[&](const unique_ptr<Product>& product) { return product->getName() == name; });
+
+	if (iter != products.end()) {
+		products.erase(iter, products.end());
+		return true;
 	}
-	cout << "������� �� ������" << endl;
+	cout << "Продукт не найден" << endl;
 	return false;
 }
 
-void Storage::updateProduct(const string_view name, field updateField, const variant<double, string>& value) {
-	for (auto& product : products) {
-		if (product.getName() == name) {
+void Storage::updateProduct(const string_view name, Field updateField, const variant<double, string>& value) {
+	for (const auto& product : products) {
+		if (product->getName() == name) {
 			switch (updateField) {
-			case field::color:
-				product.setColor(get<string>(value));
+			case Field::Color:
+				product->setColor(get<string>(value));
 				break;
-			case  field::price:
-				product.setPrice(get<double>(value));
+			case Field::Price:
+				product->setPrice(get<double>(value));
 				break;
-			case field::weight:
-				product.setWeight(get<double>(value));
+			case Field::Weight:
+				product->setWeight(get<double>(value));
 				break;
 			default:
 				break;
 			}
+			return;
 		}
 	}
 }
 
 void Storage::productsList() const {
 	for (const auto& product : products) {
-		product.printInfo();
+		product->printInfo(); // Используем -> для доступа к методам
 	}
 }
 
-vector<Product> Storage::findLowStockProd(int limit) const {
-	vector<Product> lowStock;
-	for (auto const& product : products) {
-		if (product.getAmount() <= limit) {
-			lowStock.push_back(product);
+vector<unique_ptr<Product>> Storage::findLowStockProd(int limit) const {
+	vector<unique_ptr<Product>> lowStock;
+	for (const auto& product : products) {
+		if (product->getAmount() <= limit) {
+			lowStock.push_back(make_unique<Product>(*product)); // Копируем продукт
 		}
 	}
 	return lowStock;
 }
 
 void addProduct(Storage& storage) {
-	string name;
-	string category;
-	string color = "Не указан";
-	double price;
-	double weight;
+	string name, category, color = "Не указан";
+	double price, weight;
 	int amount;
 
 	cout << "Введите название продукта: ";
@@ -76,11 +75,11 @@ void addProduct(Storage& storage) {
 	cout << "Введите вес: ";
 	cin >> weight;
 	cout << "Введите цвет (по умолчанию 'Не указан'): ";
-	cin >> color; // Можно оставить как есть
+	cin >> color;
 	cout << "Введите количество: ";
 	cin >> amount;
 
-	storage.addProduct(Product(name, category, price, weight, color, amount));
+	storage.addProduct(make_unique<Product>(name, category, price, weight, color, amount)); // Создаем уникальный указатель
 }
 
 void removeProduct(Storage& storage) {
@@ -105,17 +104,17 @@ void updateProduct(Storage& storage) {
 	if (fieldChoice == 1) {
 		cout << "Введите новый цвет: ";
 		cin >> color;
-		storage.updateProduct(name, field::color, color);
+		storage.updateProduct(name, Field::Color, color);
 	}
 	else if (fieldChoice == 2) {
 		cout << "Введите новую цену: ";
 		cin >> price;
-		storage.updateProduct(name, field::price, price);
+		storage.updateProduct(name, Field::Price, price);
 	}
 	else if (fieldChoice == 3) {
 		cout << "Введите новый вес: ";
 		cin >> weight;
-		storage.updateProduct(name, field::weight, weight);
+		storage.updateProduct(name, Field::Weight, weight);
 	}
 }
 
@@ -131,6 +130,6 @@ void findLowStockProducts(const Storage& storage) {
 	auto lowStock = storage.findLowStockProd(limit);
 	cout << "Товары с низким запасом:" << endl;
 	for (const auto& product : lowStock) {
-		product.printInfo();
+		product->printInfo();
 	}
 }

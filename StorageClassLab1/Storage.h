@@ -1,24 +1,25 @@
+#pragma once
 #include <vector>
 #include <string>
-#include <variant>
 #include <memory>
+#include <variant>
 #include "Product.h"
 
-enum class field {
-    color,
-    price,
-    weight
+enum class Field {
+    Color,
+    Price,
+    Weight
 };
 
 class Storage {
 private:
-    std::vector<Product> products;
+    std::vector<std::unique_ptr<Product>> products; // Вектор уникальных указателей на Product
 public:
-    void addProduct(const Product& product);
+    void addProduct(std::unique_ptr<Product> product); // Принимает уникальный указатель
     bool removeProduct(const std::string_view name);
-    void updateProduct(const std::string_view name, field updateField, const std::variant<double, std::string>& value);
+    void updateProduct(std::string_view name, Field updateField, const std::variant<double, std::string>& value);
     void productsList() const;
-    std::vector<Product> findLowStockProd(int limit) const;
+    std::vector<std::unique_ptr<Product>> findLowStockProd(int limit) const;
 };
 
 void addProduct(Storage& storage);

@@ -33,8 +33,10 @@ void Product::setColor(std::string_view const& newColor) {
 }
 
 void Product::printInfo() const {
-	std::cout << "\nИнформация о товаре: " << name
-		<< "\nКатегория: " << category << "\nЦена: " << price
-		<< "\nВес: " << weight << "\nЦвет: " << color
-		<< "\nКоличество: " << amount << std::endl;
+	std::cout << "Название: " << name << "\n"
+		<< "Категория: " << category << "\n"
+		<< "Цена: " << price << "\n"
+		<< "Вес: " << weight << "\n"
+		<< "Цвет: " << color << "\n"
+		<< "Количество: " << amount << std::endl;
 }
