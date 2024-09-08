@@ -17,7 +17,7 @@ private:
 public:
     void addProduct(std::unique_ptr<Product> product); // Принимает уникальный указатель
     bool removeProduct(const std::string_view name);
-    void updateProduct(std::string_view name, Field updateField, const std::variant<double, std::string>& value);
+    void updateProduct(std::string_view name, Field updateField, const std::variant<double, std::string>& value) const;
     void productsList() const;
     std::vector<std::unique_ptr<Product>> findLowStockProd(int limit) const;
 };

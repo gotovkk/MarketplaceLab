@@ -13,18 +13,17 @@ void Storage::addProduct(unique_ptr<Product> product) {
 }
 
 bool Storage::removeProduct(const string_view name) {
-	auto iter = std::remove_if(products.begin(), products.end(),
-		[&](const unique_ptr<Product>& product) { return product->getName() == name; });
-
-	if (iter != products.end()) {
-		products.erase(iter, products.end());
-		return true;
+	for (auto iter = products.begin(); iter != products.end(); iter++) {
+		if ((*iter)->getName() == name) {
+			products.erase(iter);
+			return true;
+		}
 	}
-	cout << "Продукт не найден" << endl;
+	cout << "Товар не найден " << endl;
 	return false;
 }
 
-void Storage::updateProduct(const string_view name, Field updateField, const variant<double, string>& value) {
+void Storage::updateProduct(const string_view name, Field updateField, const variant<double, string>& value) const {
 	for (const auto& product : products) {
 		if (product->getName() == name) {
 			switch (updateField) {
@@ -62,8 +61,11 @@ vector<unique_ptr<Product>> Storage::findLowStockProd(int limit) const {
 }
 
 void addProduct(Storage& storage) {
-	string name, category, color = "Не указан";
-	double price, weight;
+	string name;
+	string category;
+	string color = "Не указан";
+	double price;
+	double weight;
 	int amount;
 
 	cout << "Введите название продукта: ";
