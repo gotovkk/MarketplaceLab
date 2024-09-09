@@ -47,7 +47,7 @@ void Storage::updateProduct(const string_view name, Field updateField, const var
 
 void Storage::productsList() const {
 	for (const auto& product : products) {
-		product->printInfo(); // Используем -> для доступа к методам
+		product->printInfo(); 
 	}
 }
 
@@ -55,7 +55,7 @@ vector<unique_ptr<Product>> Storage::findLowStockProd(int limit) const {
 	vector<unique_ptr<Product>> lowStock;
 	for (const auto& product : products) {
 		if (product->getAmount() <= limit) {
-			lowStock.push_back(make_unique<Product>(*product)); // Копируем продукт
+			lowStock.push_back(make_unique<Product>(*product));
 		}
 	}
 	return lowStock;
@@ -82,7 +82,7 @@ void addProduct(Storage& storage) {
 	cout << "Введите количество: ";
 	cin >> amount;
 
-	storage.addProduct(make_unique<Product>(name, category, price, weight, color, amount)); // Создаем уникальный указатель
+	storage.addProduct(make_unique<Product>(name, category, price, weight, color, amount));
 }
 
 void removeProduct(Storage& storage) {

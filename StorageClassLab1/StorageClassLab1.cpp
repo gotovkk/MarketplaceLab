@@ -10,7 +10,7 @@ using namespace std;
 int main() {
     system("chcp 1251");
 
-    Storage storage;  // Создание объекта Storage
+    Storage storage; 
     int choice;
 
     while (true) {

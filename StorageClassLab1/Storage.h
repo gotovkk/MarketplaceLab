@@ -13,9 +13,9 @@ enum class Field {
 
 class Storage {
 private:
-    std::vector<std::unique_ptr<Product>> products; // Вектор уникальных указателей на Product
+    std::vector<std::unique_ptr<Product>> products; 
 public:
-    void addProduct(std::unique_ptr<Product> product); // Принимает уникальный указатель
+    void addProduct(std::unique_ptr<Product> product);
     bool removeProduct(const std::string_view name);
     void updateProduct(std::string_view name, Field updateField, const std::variant<double, std::string>& value) const;
     void productsList() const;
