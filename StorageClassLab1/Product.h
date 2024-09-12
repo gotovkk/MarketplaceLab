@@ -12,7 +12,7 @@ private:
 
 public:
     Product(std::string const& name, std::string const& category, double price,
-        double weight = 0.0, std::string const& color = "Не указан", int amount = 1)
+        double weight = 0.0, std::string const& color = "Не указан", int amount = 1)        
         : name(name), category(category), color(color),
         price(price), weight(weight), amount(amount) {}
 

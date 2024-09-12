@@ -25,6 +25,7 @@ int main() {
         cin >> choice;
 
         switch (choice) {
+            
         case 1:
             addProduct(storage);
             break;

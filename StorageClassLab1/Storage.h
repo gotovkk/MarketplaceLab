@@ -13,7 +13,7 @@ enum class Field {
 
 class Storage {
 private:
-    std::vector<std::unique_ptr<Product>> products; 
+    std::vector<std::unique_ptr<Product>> products;     
 public:
     void addProduct(std::unique_ptr<Product> product);
     bool removeProduct(const std::string_view name);
