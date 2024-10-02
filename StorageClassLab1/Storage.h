@@ -4,6 +4,7 @@
 #include <memory>
 #include <variant>
 #include "Product.h"
+#include <sqlite3.h>
 
 enum class Field {
     Color,
@@ -23,6 +24,7 @@ public:
     void updateProduct(std::string_view name, Field updateField, const std::variant<double, std::string>& value) const;
     void allProductsList() const;
     std::vector<std::unique_ptr<Product>> findLowStockProd(int limit) const;
+    std::vector<Product> filterByPrice(double maxPrice) const;
 };
 
 void addProduct(Storage& storage);

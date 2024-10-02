@@ -68,6 +68,20 @@ vector<unique_ptr<Product>> Storage::findLowStockProd(int limit) const {
 	return lowStock;
 }
 
+/*std::vector<Product> Storage::filterByPrice(double maxPrice) const
+{
+	std::vector<Product> filteredProducts;
+
+	for (const auto& product : products) {
+
+	}
+
+
+	return std::vector<Product>();
+}*/
+
+
+
 void addProduct(Storage& storage) {
 	string name;
 	string category;
