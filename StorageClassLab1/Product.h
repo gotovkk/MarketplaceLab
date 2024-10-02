@@ -35,6 +35,8 @@ public:
     void setColor(std::string_view const& newColor);
     void printInfo() const;
 
+    Product& operator+=(int amount);
+    Product& operator-=(int amount);
 
     friend bool operator==(const Product& lhs, const Product& rhs) {
         bool isEqual = true;

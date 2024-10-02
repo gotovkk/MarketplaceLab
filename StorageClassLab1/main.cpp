@@ -30,7 +30,7 @@ void loadProductsFromDb(sqlite3* db, Storage& storage) {
     const char* selectFrom = "SELECT name, category, color, price, weight, amount FROM products;";
     sqlite3_stmt* stmt;
 
-    if (sqlite3_prepare_v2(db, selectFrom, -1, &stmt, 0) == SQLITE_OK) {
+    if (sqlite3_prepare_v2(db, selectFrom, -1, &stmt, nullptr) == SQLITE_OK) {
         while (sqlite3_step(stmt) == SQLITE_ROW) {
             std::string name = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
             std::string category = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
@@ -39,18 +39,24 @@ void loadProductsFromDb(sqlite3* db, Storage& storage) {
             double weight = sqlite3_column_double(stmt, 4);
             int amount = sqlite3_column_int(stmt, 5);
 
-            std::unique_ptr<Product> product = std::make_unique<Product>(name, category, price, weight, color, amount);
+            auto product = std::make_unique<Product>(name, category, price, weight, color, amount);
             storage.addProduct(std::move(product));
+
         }
+
     }
 
     sqlite3_finalize(stmt);
 }
 
 int main() {
+
     system("chcp 1251");
+    cout << "Нажмите Enter, чтобы начать...";
+    cin.get();
+
+
     sqlite3* db;
-    char* errMsg = nullptr;
     int rc;
     int choice;
     std::string firstProductName;
@@ -70,8 +76,9 @@ int main() {
     Storage storage;
 
     loadProductsFromDb(db, storage);
-
+	system("cls");
     while (true) {
+        
         cout << "\nВыберите действие:\n"
             << "1. Добавить продукт\n"
             << "2. Удалить продукт\n"
@@ -80,42 +87,51 @@ int main() {
             << "5. Найти товары с низким запасом\n"
             << "6. Сравнить два товара\n"
             << "0. Выход\n"
-            << "Ваш выбор: ";
+            << "Ваш выбор:";
+
         cin >> choice;
 
         switch (choice) {
             
         case 1:
+            system("cls");
+
             addToTable(storage, db);
             break;
 
         case 2:
+            system("cls");
+
             removeProduct(storage);
             break;
 
         case 3:
+            system("cls");
+
             updateProduct(storage);
             break;
 
         case 4:
+            system("cls");
+
             showProducts(storage);
             break;
 
         case 5:
+            system("cls");
+
             findLowStockProducts(storage);
             break;
         case 6:
+            system("cls");
+
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
             cout << "Введите имя первого продукта для сравнение: ";
             getline(cin, firstProductName);
 
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-            
             cout << "Введите имя второго  продукта для сравнение: ";
             getline(cin, secondProductName);
-
 
 
             for (const auto& product : storage.productsList()) {
@@ -128,10 +144,17 @@ int main() {
             }
 
             if (first && second) {
-                cout << "Результат сравнение товаров:\n";
-                *first == *second;
+                std::cout << "Результат сравнения товаров:\n";
+                if (*first == *second) {
+                    std::cout << "Продукты совпадают" << std::endl;
+                }
+                else {
+                    std::cout << "Продукты имеют различие" << std::endl;
+                }
             }
-            else { cout << "Продукты не найдены\n"; }
+            else {
+                std::cout << "Один или оба продукта не найдены\n";
+            }
             break;
 
         case 0:

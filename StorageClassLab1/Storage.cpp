@@ -17,6 +17,7 @@ void Storage::addProduct(unique_ptr<Product> product) {
 	products.push_back(move(product));
 }
 
+
 bool Storage::removeProduct(const string_view name) {
 	for (auto iter = products.begin(); iter != products.end(); iter++) {
 		if ((*iter)->getName() == name) {
@@ -28,20 +29,27 @@ bool Storage::removeProduct(const string_view name) {
 	return false;
 }
 
-void Storage::updateProduct(const string_view name, Field updateField, const variant<double, string>& value) const {
+void Storage::updateProduct(const std::string_view name, Field updateField, const std::variant<double, std::string>& value) const {
 	for (const auto& product : products) {
 		if (product->getName() == name) {
 			switch (updateField) {
-			using enum Field;
+				using enum Field;
 			case Color:
-				product->setColor(get<string>(value));
+				product->setColor(std::get<std::string>(value));
 				break;
 			case Price:
-				product->setPrice(get<double>(value));
+				product->setPrice(std::get<double>(value));
 				break;
 			case Weight:
-				product->setWeight(get<double>(value));
+				product->setWeight(std::get<double>(value));
 				break;
+			case Amount: {
+				int amountChange = std::get<double>(value); 
+				amountChange = static_cast<int>(std::get<double>(value));
+
+				product->setAmount(amountChange); 
+				break;
+			}
 			default:
 				break;
 			}
@@ -50,11 +58,15 @@ void Storage::updateProduct(const string_view name, Field updateField, const var
 	}
 }
 
+
 void Storage::allProductsList() const
 {
 	for (const auto& product : products) {
+		cout << "----------------------" << endl;
 		product->printInfo();
 	}
+	cout << "----------------------" << endl;
+
 }
 
 
@@ -124,7 +136,7 @@ void updateProduct(const Storage& storage) {
 
 	cout << "Введите название продукта для обновления: ";
 	cin >> name;
-	cout << "Выберите поле для обновления (1 - цвет, 2 - цена, 3 - вес): ";
+	cout << "Выберите поле для обновления (1 - цвет, 2 - цена, 3 - вес, 4 - количество): ";
 	cin >> fieldChoice;
 
 	if (fieldChoice == 1) {
@@ -141,6 +153,28 @@ void updateProduct(const Storage& storage) {
 		cout << "Введите новый вес: ";
 		cin >> weight;
 		storage.updateProduct(name, Field::Weight, weight);
+	}
+	else if (fieldChoice == 4) {
+		int operationChoice;
+		std::cout << "Выберите операцию (1 - добавить, 2 - уменьшить): ";
+		std::cin >> operationChoice;
+
+		int amount;
+		std::cout << "Введите количество для обновления: ";
+		std::cin >> amount;
+
+		auto& products = storage.productsList();
+		for (const auto& product : products) {
+			if (product->getName() == name) {
+				if (operationChoice == 1) {
+					*product += amount; 
+				}
+				else if (operationChoice == 2) {
+					*product -= amount; 
+				}
+				break;
+			}
+		}
 	}
 }
 
@@ -159,3 +193,5 @@ void findLowStockProducts(const Storage& storage) {
 		product->printInfo();
 	}
 }
+
+

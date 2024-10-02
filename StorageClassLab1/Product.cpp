@@ -41,3 +41,17 @@ void Product::printInfo() const {
 		<< "Количество: " << amount << std::endl;
 }
 
+Product& Product::operator+=(int amountToAdd) {
+	this->amount += amountToAdd;
+	return *this;
+}
+
+Product& Product::operator-=(int amountToSubtract) {
+	if (this->amount >= amountToSubtract) {
+		this->amount -= amountToSubtract;
+	}
+	else {
+		this->amount = 0;
+	}
+	return *this;
+}
