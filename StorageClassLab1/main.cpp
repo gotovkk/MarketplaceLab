@@ -12,6 +12,10 @@ int main() {
 
     Storage storage; 
     int choice;
+    std::string firstProductName;
+    std::string secondProductName;
+    Product const* first = nullptr;
+    Product const* second = nullptr;
 
     while (true) {
         cout << "\nВыберите действие:\n"
@@ -20,6 +24,7 @@ int main() {
             << "3. Обновить продукт\n"
             << "4. Показать список продуктов\n"
             << "5. Найти товары с низким запасом\n"
+            << "6. Сравнить два товара\n"
             << "0. Выход\n"
             << "Ваш выбор: ";
         cin >> choice;
@@ -44,6 +49,35 @@ int main() {
 
         case 5:
             findLowStockProducts(storage);
+            break;
+        case 6:
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+            cout << "Введите имя первого продукта для сравнение: ";
+            getline(cin, firstProductName);
+
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+            
+            cout << "Введите имя второго  продукта для сравнение: ";
+            getline(cin, secondProductName);
+
+
+
+            for (const auto& product : storage.productsList()) {
+                if (product->getName() == firstProductName) {
+                    first = product.get();
+                }
+                else if (product->getName() == secondProductName) {
+                    second = product.get();
+                }
+            }
+
+            if (first && second) {
+                cout << "Результат сравнение товаров:\n";
+                *first == *second;
+            }
+            else { cout << "Продукты не найдены\n"; }
             break;
 
         case 0:

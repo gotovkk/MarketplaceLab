@@ -40,3 +40,32 @@ void Product::printInfo() const {
 		<< "Цвет: " << color << "\n"
 		<< "Количество: " << amount << std::endl;
 }
+
+/*Тут сравнение характеристик аля на онлайнере*/
+bool operator==(const Product& first, const Product& second)
+{
+	bool isEqual = true;
+	std::vector<std::pair<std::string, bool>>comprassion =
+	{
+		{"Название", first.name == second.name},
+		{"Категория", first.category == second.category},
+		{"Цена", first.price == second.price},
+		{"Вес", first.weight == second.weight},
+		{"Цвет", first.color == second.color},
+		{"Количество", first.amount == second.amount},
+	};
+	std::cout << "Сравнение характеристик продуктов:\n";
+
+	for (const auto& [field, result] : comprassion) {
+		std::cout << field << ": "
+			<< first.name << " = "
+			<< (field == "Цена" || field == "Вес" || field == "Количество"
+				? std::to_string(first.price) : first.name)
+			<< ", " << second.name << " = "
+			<< (field == "Цена" || field == "Вес" || field == "Количество"
+				? std::to_string(second.price) : second.name)
+			<< (result ? " (совпадает)" : " (различается)") << "\n";
+	}
+
+	return isEqual;
+}

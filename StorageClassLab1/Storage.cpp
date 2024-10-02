@@ -1,6 +1,11 @@
 ﻿#include "Storage.h"
 using namespace std;
 
+const std::vector<std::unique_ptr<Product>>& Storage::productsList() const
+{
+	return products;
+}
+
 void Storage::addProduct(unique_ptr<Product> product) {
 	for (const auto& existProduct : products) {
 		if (existProduct->getName() == product->getName()) {
@@ -45,11 +50,13 @@ void Storage::updateProduct(const string_view name, Field updateField, const var
 	}
 }
 
-void Storage::productsList() const {
+void Storage::allProductsList() const
+{
 	for (const auto& product : products) {
-		product->printInfo(); 
+		product->printInfo();
 	}
 }
+
 
 vector<unique_ptr<Product>> Storage::findLowStockProd(int limit) const {
 	vector<unique_ptr<Product>> lowStock;
@@ -123,7 +130,7 @@ void updateProduct(const Storage& storage) {
 
 void showProducts(const Storage& storage) {
 	cout << "Список предметов:" << endl;
-	storage.productsList();
+	storage.allProductsList();
 }
 
 void findLowStockProducts(const Storage& storage) {

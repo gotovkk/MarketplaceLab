@@ -1,7 +1,12 @@
 #pragma once
 #include <iostream>
+#include <vector>
+#include <string>
+
 
 class Product {
+    friend bool operator==(const Product& first, const Product& second);
+
 private:
     std::string name;
     std::string category;
@@ -27,6 +32,5 @@ public:
     void setWeight(double newWeight);
     void setAmount(int newAmount);
     void setColor(std::string_view const& newColor);
-
     void printInfo() const;
 };
