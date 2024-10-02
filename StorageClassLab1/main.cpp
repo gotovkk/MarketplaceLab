@@ -19,8 +19,8 @@ void createTable(sqlite3* db) {
         "weight REAL DEFAULT 0.0, "
         "amount INTEGER DEFAULT 1);";
 
-    char* errMsg = 0;
-    int rc = sqlite3_exec(db, sql, 0, 0, &errMsg);
+    char* errMsg = nullptr;
+    int rc = sqlite3_exec(db, sql, nullptr, nullptr, &errMsg);
     if (rc != SQLITE_OK) {
         std::cerr << "Ошибка в создании таблицы" << errMsg << std::endl;
         sqlite3_free(errMsg);
@@ -35,7 +35,7 @@ void loadProductsFromDb(sqlite3* db, Storage& storage) {
 int main() {
     system("chcp 1251");
     sqlite3* db;
-    char* errMsg = 0;
+    char* errMsg = nullptr;
     int rc;
     int choice;
     std::string firstProductName;

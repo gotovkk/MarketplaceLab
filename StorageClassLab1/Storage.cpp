@@ -108,8 +108,11 @@ void addProduct(Storage& storage) {
 	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
 	std::string sqlInsert = "INSERT INTO products (name, category, color, price, weight, amount) VALUES ('" +
-		name + "', '" + category + "', '" + color + "', " +
-		std::to_string(price) + ", " + std::to_string(weight) + ", " +
+		name + "', '" + 
+		category + "', '" + 
+		color + "', " +
+		std::to_string(price) + ", " + 
+		std::to_string(weight) + ", " +
 		std::to_string(amount) + ");";
 }
 
