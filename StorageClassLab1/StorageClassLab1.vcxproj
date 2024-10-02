@@ -137,6 +137,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="main.h" />
     <ClInclude Include="Product.h" />
     <ClInclude Include="SQLite\sqlite3.h" />
     <ClInclude Include="Storage.h" />

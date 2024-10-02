@@ -3,6 +3,7 @@
 #include <variant>
 #include "Storage.h"
 #include "Product.h"
+#include "main.h"
 
 
 using namespace std;
@@ -15,6 +16,24 @@ Product const* findProductByName(const Storage& storage, std::string_view produc
     }
     return nullptr;
 }
+
+void comprasionCheck(const Product* first, const Product* second)
+{
+    if (first && second) {
+        std::cout << "Результат сравнения товаров:\n";
+        if (*first == *second) {
+            std::cout << "Продукты совпадают" << std::endl;
+        }
+        else {
+            std::cout << "Продукты имеют различие" << std::endl;
+        }
+    }
+    else {
+        std::cout << "Один или оба продукта не найдены\n";
+    }
+}
+
+
 
 
 void createTable(sqlite3* db) {
@@ -145,18 +164,7 @@ int main() {
             first = findProductByName(storage, firstProductName);
             second = findProductByName(storage, secondProductName);
 
-            if (first && second) {
-                std::cout << "Результат сравнения товаров:\n";
-                if (*first == *second) {
-                    std::cout << "Продукты совпадают" << std::endl;
-                }
-                else {
-                    std::cout << "Продукты имеют различие" << std::endl;
-                }
-            }
-            else {
-                std::cout << "Один или оба продукта не найдены\n";
-            }
+            comprasionCheck(first, second);
             break;
 
         case 0:

@@ -31,6 +31,6 @@ public:
 void addToTable(Storage& storage, sqlite3* db);
 void removeProduct(Storage& storage);
 void updateProduct(const Storage& storage);
-void amountChange(const Storage& storage, const std::string& name);
+void amountChange(const Storage& storage, std::string_view name);
 void showProducts(const Storage& storage);
 void findLowStockProducts(const Storage& storage);

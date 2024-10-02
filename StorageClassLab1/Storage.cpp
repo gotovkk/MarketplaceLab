@@ -157,7 +157,7 @@ void updateProduct(const Storage& storage) {
 	}
 }
 
-void amountChange(const Storage& storage, const std::string& name)
+void amountChange(const Storage& storage, std::string_view name)
 {
 	int operationChoice;
 	std::cout << "Выберите операцию (1 - добавить, 2 - уменьшить): ";
