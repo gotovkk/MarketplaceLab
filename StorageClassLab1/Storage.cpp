@@ -153,25 +153,30 @@ void updateProduct(const Storage& storage) {
 		storage.updateProduct(name, Field::Weight, weight);
 	}
 	else if (fieldChoice == 4) {
-		int operationChoice;
-		std::cout << "Выберите операцию (1 - добавить, 2 - уменьшить): ";
-		std::cin >> operationChoice;
+		amountChange(storage, name);
+	}
+}
 
-		int amount;
-		std::cout << "Введите количество для обновления: ";
-		std::cin >> amount;
+void amountChange(const Storage& storage, std::string& name)
+{
+	int operationChoice;
+	std::cout << "Выберите операцию (1 - добавить, 2 - уменьшить): ";
+	std::cin >> operationChoice;
 
-		auto& products = storage.productsList();
-		for (const auto& product : products) {
-			if (product->getName() == name) {
-				if (operationChoice == 1) {
-					*product += amount; 
-				}
-				else if (operationChoice == 2) {
-					*product -= amount; 
-				}
-				break;
+	int amount;
+	std::cout << "Введите количество для обновления: ";
+	std::cin >> amount;
+
+	auto& products = storage.productsList();
+	for (const auto& product : products) {
+		if (product->getName() == name) {
+			if (operationChoice == 1) {
+				*product += amount;
 			}
+			else if (operationChoice == 2) {
+				*product -= amount;
+			}
+			break;
 		}
 	}
 }

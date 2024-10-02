@@ -7,6 +7,16 @@
 
 using namespace std;
 
+Product const* findProductByName(const Storage& storage, std::string_view productName) {
+    for (const auto& product : storage.productsList()) {
+        if (product->getName() == productName) {
+            return product.get();
+        }
+    }
+    return nullptr;
+}
+
+
 void createTable(sqlite3* db) {
     const char* sql =
         "CREATE TABLE IF NOT EXISTS products ("
@@ -55,7 +65,6 @@ int main() {
     cout << "Нажмите Enter, чтобы начать...";
     cin.get();
 
-
     sqlite3* db;
     int rc;
     int choice;
@@ -76,9 +85,9 @@ int main() {
     Storage storage;
 
     loadProductsFromDb(db, storage);
-	system("cls");
+    system("cls");
     while (true) {
-        
+
         cout << "\nВыберите действие:\n"
             << "1. Добавить продукт\n"
             << "2. Удалить продукт\n"
@@ -92,7 +101,7 @@ int main() {
         cin >> choice;
 
         switch (choice) {
-            
+
         case 1:
             system("cls");
 
@@ -133,15 +142,8 @@ int main() {
             cout << "Введите имя второго  продукта для сравнение: ";
             getline(cin, secondProductName);
 
-
-            for (const auto& product : storage.productsList()) {
-                if (product->getName() == firstProductName) {
-                    first = product.get();
-                }
-                else if (product->getName() == secondProductName) {
-                    second = product.get();
-                }
-            }
+            first = findProductByName(storage, firstProductName);
+            second = findProductByName(storage, secondProductName);
 
             if (first && second) {
                 std::cout << "Результат сравнения товаров:\n";
