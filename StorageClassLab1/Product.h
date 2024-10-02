@@ -5,7 +5,7 @@
 
 
 class Product {
-    friend bool operator==(const Product& first, const Product& second);
+    friend bool operator==(const Product& lhs, const Product& rhs);
 
 private:
     std::string name;
@@ -33,4 +33,33 @@ public:
     void setAmount(int newAmount);
     void setColor(std::string_view const& newColor);
     void printInfo() const;
+
+    friend bool operator==(const Product& lhs, const Product& rhs)
+    {
+        bool isEqual = true;
+        std::vector<std::pair<std::string, bool>>comprassion =
+        {
+            {"Название", lhs.name == rhs.name},
+            {"Категория", lhs.category == rhs.category},
+            {"Цена", lhs.price == rhs.price},
+            {"Вес", lhs.weight == rhs.weight},
+            {"Цвет", lhs.color == rhs.color},
+            {"Количество", lhs.amount == rhs.amount},
+        };
+        std::cout << "Сравнение характеристик продуктов:\n";
+
+        for (const auto& [field, result] : comprassion) {
+            std::cout << field << ": "
+                << lhs.name << " = "
+                << (field == "Цена" || field == "Вес" || field == "Количество"
+                    ? std::to_string(lhs.price) : lhs.name)
+                << ", " << rhs.name << " = "
+                << (field == "Цена" || field == "Вес" || field == "Количество"
+                    ? std::to_string(rhs.price) : rhs.name)
+                << (result ? " (совпадает)" : " (различается)") << "\n";
+        }
+
+        return isEqual;
+    }
+
 };
