@@ -3,6 +3,7 @@
 #include <string>
 #include <memory>
 #include <variant>
+#include <format>
 #include "Product.h"
 #include <sqlite3.h>
 
@@ -20,14 +21,16 @@ public:
 
 
     void addProduct(std::unique_ptr<Product> product);
+	void addToTable(Storage& storage, sqlite3* db);
     bool removeProduct(const std::string_view name);
     void updateProduct(std::string_view name, Field updateField, const std::variant<double, std::string>& value) const;
     void allProductsList() const;
     std::vector<std::unique_ptr<Product>> findLowStockProd(int limit) const;
     std::vector<Product> filterByPrice(double maxPrice) const;
 };
+void addToTable(Storage& storage, sqlite3* db);
 
-void addProduct(Storage& storage);
+void addProduct(std::unique_ptr<Product> product);
 void removeProduct(Storage& storage);
 void updateProduct(const Storage& storage);
 void showProducts(const Storage& storage);

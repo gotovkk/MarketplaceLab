@@ -18,7 +18,7 @@ private:
 
 public:
     Product(std::string const& name, std::string const& category, double price,
-        double weight = 0.0, std::string const& color = "Не указан", int amount = 1)        
+        double weight = 0.0, std::string const& color = "Не указан", int amount = 1)
         : name(name), category(category), color(color),
         price(price), weight(weight), amount(amount) {}
 
@@ -35,11 +35,11 @@ public:
     void setColor(std::string_view const& newColor);
     void printInfo() const;
 
-    friend bool operator==(const Product& lhs, const Product& rhs)
-    {
+
+    friend bool operator==(const Product& lhs, const Product& rhs) {
         bool isEqual = true;
-        std::vector<std::pair<std::string, bool>>comprassion =
-        {
+
+        std::vector<std::pair<std::string, bool>> comparison = {
             {"Название", lhs.name == rhs.name},
             {"Категория", lhs.category == rhs.category},
             {"Цена", lhs.price == rhs.price},
@@ -47,20 +47,24 @@ public:
             {"Цвет", lhs.color == rhs.color},
             {"Количество", lhs.amount == rhs.amount},
         };
+
         std::cout << "Сравнение характеристик продуктов:\n";
 
-        for (const auto& [field, result] : comprassion) {
-            std::cout << field << ": "
-                << lhs.name << " = "
-                << (field == "Цена" || field == "Вес" || field == "Количество"
-                    ? std::to_string(lhs.price) : lhs.name)
-                << ", " << rhs.name << " = "
-                << (field == "Цена" || field == "Вес" || field == "Количество"
-                    ? std::to_string(rhs.price) : rhs.name)
-                << (result ? " (совпадает)" : " (различается)") << "\n";
+        for (const auto& [field, result] : comparison) {
+            if (result) {
+                std::cout << field << ": совпадает" << std::endl;
+            }
+            else {
+                if (field == "Цена" || field == "Вес" || field == "Количество") {
+                    std::cout << field << ": " << lhs.name << " (" << lhs.price << ") != " << rhs.name << " (" << rhs.price << ")" << std::endl;
+                }
+                else {
+                    std::cout << field << ": " << lhs.name << " != " << rhs.name << std::endl;
+                }
+                isEqual = false;  
+            }
         }
 
         return isEqual;
     }
-
 };

@@ -7,7 +7,6 @@
 
 using namespace std;
 
-//таблица
 void createTable(sqlite3* db) {
     const char* sql =
         "CREATE TABLE IF NOT EXISTS products ("
@@ -27,9 +26,25 @@ void createTable(sqlite3* db) {
     }
 }
 
-// Сейчас написать выгрузку данных с таблицы в сторагу
 void loadProductsFromDb(sqlite3* db, Storage& storage) {
+    const char* selectFrom = "SELECT name, category, color, price, weight, amount FROM products;";
+    sqlite3_stmt* stmt;
 
+    if (sqlite3_prepare_v2(db, selectFrom, -1, &stmt, 0) == SQLITE_OK) {
+        while (sqlite3_step(stmt) == SQLITE_ROW) {
+            std::string name = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
+            std::string category = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
+            std::string color = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
+            double price = sqlite3_column_double(stmt, 3);
+            double weight = sqlite3_column_double(stmt, 4);
+            int amount = sqlite3_column_int(stmt, 5);
+
+            std::unique_ptr<Product> product = std::make_unique<Product>(name, category, price, weight, color, amount);
+            storage.addProduct(std::move(product));
+        }
+    }
+
+    sqlite3_finalize(stmt);
 }
 
 int main() {
@@ -71,7 +86,7 @@ int main() {
         switch (choice) {
             
         case 1:
-            addProduct(storage);
+            addToTable(storage, db);
             break;
 
         case 2:
@@ -120,6 +135,7 @@ int main() {
             break;
 
         case 0:
+            sqlite3_close(db);
             return 0;
 
         default:

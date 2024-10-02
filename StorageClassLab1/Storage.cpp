@@ -68,21 +68,7 @@ vector<unique_ptr<Product>> Storage::findLowStockProd(int limit) const {
 	return lowStock;
 }
 
-/*std::vector<Product> Storage::filterByPrice(double maxPrice) const
-{
-	std::vector<Product> filteredProducts;
-
-	for (const auto& product : products) {
-
-	}
-
-
-	return std::vector<Product>();
-}*/
-
-
-//Добавление продуктов и вставочка в таблицу
-void addProduct(Storage& storage) {
+void addToTable(Storage& storage, sqlite3* db) {
 	string name;
 	string category;
 	string color = "Не указан";
@@ -107,13 +93,19 @@ void addProduct(Storage& storage) {
 
 	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-	std::string sqlInsert = "INSERT INTO products (name, category, color, price, weight, amount) VALUES ('" +
-		name + "', '" + 
-		category + "', '" + 
-		color + "', " +
-		std::to_string(price) + ", " + 
-		std::to_string(weight) + ", " +
-		std::to_string(amount) + ");";
+	std::string sqlInsert = std::format(
+		"INSERT INTO products (name, category, color, price, weight, amount) VALUES ('{}', '{}', '{}', {}, {}, {});",
+		name, category, color, price, weight, amount);
+
+	char* errMsg = nullptr;
+	int rc = sqlite3_exec(db, sqlInsert.c_str(), nullptr, nullptr, &errMsg);
+	if (rc != SQLITE_OK) {
+		std::cerr << "Ошибка добавления продукта в базу данных: " << errMsg << std::endl;
+		sqlite3_free(errMsg);  // Освобождаем память, выделенную для сообщения об ошибке
+	}
+	else {
+		std::cout << "Продукт успешно добавлен в базу данных." << std::endl;
+	}
 }
 
 void removeProduct(Storage& storage) {
