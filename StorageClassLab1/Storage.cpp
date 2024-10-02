@@ -44,9 +44,7 @@ void Storage::updateProduct(const std::string_view name, Field updateField, cons
 				product->setWeight(std::get<double>(value));
 				break;
 			case Amount: {
-				int amountChange = std::get<double>(value); 
-				amountChange = static_cast<int>(std::get<double>(value));
-
+				auto amountChange = static_cast<int>(std::get<double>(value)); 
 				product->setAmount(amountChange); 
 				break;
 			}
