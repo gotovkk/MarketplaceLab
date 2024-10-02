@@ -55,3 +55,20 @@ Product& Product::operator-=(int amountToSubtract) {
 	}
 	return *this;
 }
+
+void comprasionCheck(const Product* first, const Product* second)
+{
+	if (first && second) {
+		std::cout << "Результат сравнения товаров:\n";
+		if (*first == *second) {
+			std::cout << "Продукты совпадают" << std::endl;
+		}
+		else {
+			std::cout << "Продукты имеют различие" << std::endl;
+		}
+	}
+	else {
+		std::cout << "Один или оба продукта не найдены\n";
+	}
+}
+

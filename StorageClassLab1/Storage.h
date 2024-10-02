@@ -34,3 +34,7 @@ void updateProduct(const Storage& storage);
 void amountChange(const Storage& storage, std::string_view name);
 void showProducts(const Storage& storage);
 void findLowStockProducts(const Storage& storage);
+
+Product const* findProductByName(const Storage& storage, std::string_view productName);
+void createTable(sqlite3* db);
+void loadProductsFromDb(sqlite3* db, Storage& storage);
