@@ -7,15 +7,54 @@
 
 using namespace std;
 
+//таблица
+void createTable(sqlite3* db) {
+    const char* sql =
+        "CREATE TABLE IF NOT EXISTS products ("
+        "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "name TEXT UNIQUE NOT NULL, "
+        "category TEXT NOT NULL, "
+        "color TEXT DEFAULT 'Не указан', "
+        "price REAL NOT NULL, "
+        "weight REAL DEFAULT 0.0, "
+        "amount INTEGER DEFAULT 1);";
+
+    char* errMsg = 0;
+    int rc = sqlite3_exec(db, sql, 0, 0, &errMsg);
+    if (rc != SQLITE_OK) {
+        std::cerr << "Ошибка в создании таблицы" << errMsg << std::endl;
+        sqlite3_free(errMsg);
+    }
+}
+
+// Сейчас написать выгрузку данных с таблицы в сторагу
+void loadProductsFromDb(sqlite3* db, Storage& storage) {
+
+}
+
 int main() {
     system("chcp 1251");
-
-    Storage storage; 
+    sqlite3* db;
+    char* errMsg = 0;
+    int rc;
     int choice;
     std::string firstProductName;
     std::string secondProductName;
     Product const* first = nullptr;
     Product const* second = nullptr;
+
+    const char* dbPath = "C:\\Users\\anima\\source\\repos\\StorageClassLab1\\mydb.db";
+
+    rc = sqlite3_open(dbPath, &db);
+    if (rc != SQLITE_OK) {
+        std::cerr << "Ошибка открытия бд" << sqlite3_errmsg(db) << std::endl;
+    }
+
+    createTable(db);
+
+    Storage storage;
+
+    loadProductsFromDb(db, storage);
 
     while (true) {
         cout << "\nВыберите действие:\n"
@@ -88,3 +127,4 @@ int main() {
         }
     }
 }
+

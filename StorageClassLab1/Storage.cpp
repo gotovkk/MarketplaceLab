@@ -81,7 +81,7 @@ vector<unique_ptr<Product>> Storage::findLowStockProd(int limit) const {
 }*/
 
 
-
+//Добавление продуктов и вставочка в таблицу
 void addProduct(Storage& storage) {
 	string name;
 	string category;
@@ -104,6 +104,13 @@ void addProduct(Storage& storage) {
 	cin >> amount;
 
 	storage.addProduct(make_unique<Product>(name, category, price, weight, color, amount));
+
+	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+	std::string sqlInsert = "INSERT INTO products (name, category, color, price, weight, amount) VALUES ('" +
+		name + "', '" + category + "', '" + color + "', " +
+		std::to_string(price) + ", " + std::to_string(weight) + ", " +
+		std::to_string(amount) + ");";
 }
 
 void removeProduct(Storage& storage) {
