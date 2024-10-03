@@ -29,6 +29,73 @@ bool Storage::removeProduct(const string_view name) {
 	return false;
 }
 
+void Storage::allProductsList() const
+{
+	for (const auto& product : products) {
+		cout << "----------------------" << endl;
+		product->printInfo();
+	}
+	cout << "----------------------" << endl;
+
+}
+
+vector<unique_ptr<Product>> Storage::findLowStockProd(int limit) const {
+	vector<unique_ptr<Product>> lowStock;
+	for (const auto& product : products) {
+		if (product->getAmount() <= limit) {
+			lowStock.push_back(make_unique<Product>(*product));
+		}
+	}
+	return lowStock;
+}
+
+void removeProduct(Storage& storage) {
+	string name;
+	cout << "Введите название продукта для удаления : ";
+	cin >> name;
+	storage.removeProduct(name);
+}
+
+void showProducts(const Storage& storage) {
+	cout << "Список предметов:" << endl;
+	storage.allProductsList();
+}
+
+void findLowStockProducts(const Storage& storage) {
+	int limit;
+	cout << "Введите лимит для низкого запаса: ";
+	cin >> limit;
+	auto lowStock = storage.findLowStockProd(limit);
+	cout << "Товары с низким запасом:" << endl;
+	for (const auto& product : lowStock) {
+		product->printInfo();
+	}
+}
+
+void amountChange(const Storage& storage, std::string_view name)
+{
+	int operationChoice;
+	std::cout << "Выберите операцию (1 - добавить, 2 - уменьшить): ";
+	std::cin >> operationChoice;
+
+	int amount;
+	std::cout << "Введите количество для обновления: ";
+	std::cin >> amount;
+
+	auto& products = storage.productsList();
+	for (const auto& product : products) {
+		if (product->getName() == name) {
+			if (operationChoice == 1) {
+				*product += amount;
+			}
+			else if (operationChoice == 2) {
+				*product -= amount;
+			}
+			break;
+		}
+	}
+}
+
 void Storage::updateProduct(const std::string_view name, Field updateField, const std::variant<double, std::string>& value) const {
 	for (const auto& product : products) {
 		if (product->getName() == name) {
@@ -44,8 +111,8 @@ void Storage::updateProduct(const std::string_view name, Field updateField, cons
 				product->setWeight(std::get<double>(value));
 				break;
 			case Amount: {
-				auto amountChange = static_cast<int>(std::get<double>(value)); 
-				product->setAmount(amountChange); 
+				auto amountChange = static_cast<int>(std::get<double>(value));
+				product->setAmount(amountChange);
 				break;
 			}
 			default:
@@ -56,27 +123,6 @@ void Storage::updateProduct(const std::string_view name, Field updateField, cons
 	}
 }
 
-
-void Storage::allProductsList() const
-{
-	for (const auto& product : products) {
-		cout << "----------------------" << endl;
-		product->printInfo();
-	}
-	cout << "----------------------" << endl;
-
-}
-
-
-vector<unique_ptr<Product>> Storage::findLowStockProd(int limit) const {
-	vector<unique_ptr<Product>> lowStock;
-	for (const auto& product : products) {
-		if (product->getAmount() <= limit) {
-			lowStock.push_back(make_unique<Product>(*product));
-		}
-	}
-	return lowStock;
-}
 
 void addToTable(Storage& storage, sqlite3* db) {
 	string name;
@@ -118,13 +164,6 @@ void addToTable(Storage& storage, sqlite3* db) {
 	}
 }
 
-void removeProduct(Storage& storage) {
-	string name;
-	cout << "Введите название продукта для удаления : ";
-	cin >> name;
-	storage.removeProduct(name);
-}
-
 void updateProduct(const Storage& storage) {
 	string name;
 	string color;
@@ -156,47 +195,6 @@ void updateProduct(const Storage& storage) {
 		amountChange(storage, name);
 	}
 }
-
-void amountChange(const Storage& storage, std::string_view name)
-{
-	int operationChoice;
-	std::cout << "Выберите операцию (1 - добавить, 2 - уменьшить): ";
-	std::cin >> operationChoice;
-
-	int amount;
-	std::cout << "Введите количество для обновления: ";
-	std::cin >> amount;
-
-	auto& products = storage.productsList();
-	for (const auto& product : products) {
-		if (product->getName() == name) {
-			if (operationChoice == 1) {
-				*product += amount;
-			}
-			else if (operationChoice == 2) {
-				*product -= amount;
-			}
-			break;
-		}
-	}
-}
-
-void showProducts(const Storage& storage) {
-	cout << "Список предметов:" << endl;
-	storage.allProductsList();
-}
-
-void findLowStockProducts(const Storage& storage) {
-	int limit;
-	cout << "Введите лимит для низкого запаса: ";
-	cin >> limit;
-	auto lowStock = storage.findLowStockProd(limit);
-	cout << "Товары с низким запасом:" << endl;
-	for (const auto& product : lowStock) {
-		product->printInfo();
-	}
-}
-
 
 Product const* findProductByName(const Storage& storage, std::string_view productName) {
 	for (const auto& product : storage.productsList()) {

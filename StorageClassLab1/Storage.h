@@ -28,13 +28,14 @@ public:
     std::vector<std::unique_ptr<Product>> findLowStockProd(int limit) const;
 };
 
-void addToTable(Storage& storage, sqlite3* db);
+
 void removeProduct(Storage& storage);
 void updateProduct(const Storage& storage);
 void amountChange(const Storage& storage, std::string_view name);
 void showProducts(const Storage& storage);
 void findLowStockProducts(const Storage& storage);
 
+void addToTable(Storage& storage, sqlite3* db);
 Product const* findProductByName(const Storage& storage, std::string_view productName);
 void createTable(sqlite3* db);
 void loadProductsFromDb(sqlite3* db, Storage& storage);
