@@ -1,4 +1,6 @@
-﻿#include "Storage.h"
+﻿#pragma once
+
+#include "Storage.h"
 using namespace std;
 
 const std::vector<std::unique_ptr<Product>>& Storage::productsList() const
@@ -6,19 +8,20 @@ const std::vector<std::unique_ptr<Product>>& Storage::productsList() const
 	return products;
 }
 
-void Storage::addProduct(unique_ptr<Product> product) {
+void Storage::addProduct(std::unique_ptr<Product> product) {
 	for (const auto& existProduct : products) {
-		if (existProduct->getName() == product->getName()) {
+		if (existProduct->getName() == product->getName() && existProduct->getSellerId() == product->getSellerId()) {
 			int newAmount = existProduct->getAmount() + product->getAmount();
 			existProduct->setAmount(newAmount);
 			return;
 		}
 	}
-	products.push_back(move(product));
+	products.push_back(std::move(product));
 }
 
 
-bool Storage::removeProduct(const string_view name) {
+
+bool Storage::removeProduct(const string_view name, int seller_id) {
 	for (auto iter = products.begin(); iter != products.end(); iter++) {
 		if ((*iter)->getName() == name) {
 			products.erase(iter);
@@ -50,10 +53,13 @@ vector<unique_ptr<Product>> Storage::findLowStockProd(int limit) const {
 }
 
 void removeProduct(Storage& storage) {
+	int seller_id;
+	cout << "Введите ID продавца: ";
+	cin >> seller_id;
 	string name;
 	cout << "Введите название продукта для удаления : ";
 	cin >> name;
-	storage.removeProduct(name);
+	storage.removeProduct(name, seller_id);
 }
 
 void showProducts(const Storage& storage) {
@@ -101,14 +107,8 @@ void Storage::updateProduct(const std::string_view name, Field updateField, cons
 		if (product->getName() == name) {
 			switch (updateField) {
 				using enum Field;
-			case Color:
-				product->setColor(std::get<std::string>(value));
-				break;
 			case Price:
 				product->setPrice(std::get<double>(value));
-				break;
-			case Weight:
-				product->setWeight(std::get<double>(value));
 				break;
 			case Amount: {
 				auto amountChange = static_cast<int>(std::get<double>(value));
@@ -124,40 +124,42 @@ void Storage::updateProduct(const std::string_view name, Field updateField, cons
 }
 
 
-void addToTable(Storage& storage, sqlite3* db) {
+void addToTable(Storage& storage, sqlite3* db, int seller_id) {
 	string name;
 	string category;
-	string color = "Не указан";
+	string description;
 	double price;
-	double weight;
 	int amount;
+	int category_id;
 
 	cout << "Введите название продукта: ";
 	cin >> name;
-	cout << "Введите категорию: ";
-	cin >> category;
+	cout << "Введите описание продукта: ";
+	cin.ignore();
+	getline(cin, description);
 	cout << "Введите цену: ";
 	cin >> price;
-	cout << "Введите вес: ";
-	cin >> weight;
-	cout << "Введите цвет (по умолчанию 'Не указан'): ";
-	cin >> color;
 	cout << "Введите количество: ";
 	cin >> amount;
+	cout << "Введите ID категории ";
+	cin >> category_id;
 
-	storage.addProduct(make_unique<Product>(name, category, price, weight, color, amount));
+
+	storage.addProduct(std::make_unique<Product>(name, description, price, amount, seller_id, category_id));
 
 	std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
 	std::string sqlInsert = std::format(
-		"INSERT INTO products (name, category, color, price, weight, amount) VALUES ('{}', '{}', '{}', {}, {}, {});",
-		name, category, color, price, weight, amount);
+		"INSERT INTO products (name, description, price, seller_id, category_id, amount) VALUES ('{}', '{}', {}, {}, {}, {});",
+		name, description, price, seller_id, category_id, amount);
+
+
 
 	char* errMsg = nullptr;
 	int rc = sqlite3_exec(db, sqlInsert.c_str(), nullptr, nullptr, &errMsg);
 	if (rc != SQLITE_OK) {
 		std::cerr << "Ошибка добавления продукта в базу данных: " << errMsg << std::endl;
-		sqlite3_free(errMsg);  // Освобождаем память, выделенную для сообщения об ошибке
+		sqlite3_free(errMsg);
 	}
 	else {
 		std::cout << "Продукт успешно добавлен в базу данных." << std::endl;
@@ -168,7 +170,6 @@ void updateProduct(const Storage& storage) {
 	string name;
 	string color;
 	double price;
-	double weight;
 	int fieldChoice;
 
 	cout << "Введите название продукта для обновления: ";
@@ -187,11 +188,6 @@ void updateProduct(const Storage& storage) {
 		storage.updateProduct(name, Field::Price, price);
 	}
 	else if (fieldChoice == 3) {
-		cout << "Введите новый вес: ";
-		cin >> weight;
-		storage.updateProduct(name, Field::Weight, weight);
-	}
-	else if (fieldChoice == 4) {
 		amountChange(storage, name);
 	}
 }
@@ -208,13 +204,15 @@ Product const* findProductByName(const Storage& storage, std::string_view produc
 void createTable(sqlite3* db) {
 	const char* sql =
 		"CREATE TABLE IF NOT EXISTS products ("
-		"id INTEGER PRIMARY KEY AUTOINCREMENT, "
-		"name TEXT UNIQUE NOT NULL, "
-		"category TEXT NOT NULL, "
-		"color TEXT DEFAULT 'Не указан', "
-		"price REAL NOT NULL, "
-		"weight REAL DEFAULT 0.0, "
-		"amount INTEGER DEFAULT 1);";
+		"product_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+		"name VARCHAR(100) NOT NULL, "
+		"description TEXT, "  
+		"price DECIMAL(10, 2) NOT NULL, " 
+		"amount INTEGER NOT NULL, " 
+		"seller_id INTEGER NOT NULL, "  
+		"category_id INTEGER, "
+		"FOREIGN KEY (seller_id) REFERENCES sellers(seller_id), "
+		"FOREIGN KEY (category_id) REFERENCES categories(category_id));";
 
 	char* errMsg = nullptr;
 	int rc = sqlite3_exec(db, sql, nullptr, nullptr, &errMsg);
@@ -226,23 +224,27 @@ void createTable(sqlite3* db) {
 
 
 void loadProductsFromDb(sqlite3* db, Storage& storage) {
-	const char* selectFrom = "SELECT name, category, color, price, weight, amount FROM products;";
+	const char* selectFrom = R"(
+        SELECT name, description, price, amount, seller_id, category_id 
+        FROM products;
+    )";
 	sqlite3_stmt* stmt;
 
 	if (sqlite3_prepare_v2(db, selectFrom, -1, &stmt, nullptr) == SQLITE_OK) {
 		while (sqlite3_step(stmt) == SQLITE_ROW) {
 			std::string name = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
-			std::string category = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
-			std::string color = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2));
-			double price = sqlite3_column_double(stmt, 3);
-			double weight = sqlite3_column_double(stmt, 4);
-			int amount = sqlite3_column_int(stmt, 5);
+			std::string description = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
+			double price = sqlite3_column_double(stmt, 2);
+			int amount = sqlite3_column_int(stmt, 3);
+			int seller_id = sqlite3_column_int(stmt, 4); // Исправлено
+			int category_id = sqlite3_column_int(stmt, 5);
 
-			auto product = std::make_unique<Product>(name, category, price, weight, color, amount);
+			auto product = std::make_unique<Product>(name, description, price, amount, seller_id, category_id);
 			storage.addProduct(std::move(product));
-
 		}
-
+	}
+	else {
+		std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
 	}
 
 	sqlite3_finalize(stmt);

@@ -10,29 +10,26 @@ class Product {
 
 private:
     std::string name;
-    std::string category;
-    std::string color;
+    std::string description;
     double price;
-    double weight;
     int amount;
+    int seller_id;
+    int category_id;
 
 public:
-    Product(std::string const& name, std::string const& category, double price,
-        double weight = 0.0, std::string const& color = "Не указан", int amount = 1)
-        : name(name), category(category), color(color),
-        price(price), weight(weight), amount(amount) {}
+    Product(std::string const& name, std::string const& description, double price, int amount,
+        int seller_id, int category_id)
+        : name(name), description(description), price(price), amount(amount),
+        seller_id(seller_id), category_id(category_id){}
 
     double getPrice() const;
-    double getWeight() const;
-    std::string getName() const;
-    std::string getCategory() const;
-    std::string getColor() const;
     int getAmount() const;
-
+    std::string getName() const;
+    std::string getDescription() const;
+    int getSellerId() const;
+    int getCategoryId() const;
     void setPrice(double newPrice);
-    void setWeight(double newWeight);
     void setAmount(int newAmount);
-    void setColor(std::string_view const& newColor);
     void printInfo() const;
 
     Product& operator+=(int amount);
@@ -43,12 +40,13 @@ public:
 
         std::vector<std::pair<std::string, bool>> comparison = {
             {"Название", lhs.name == rhs.name},
-            {"Категория", lhs.category == rhs.category},
+            {"Описание", lhs.description == rhs.description},
             {"Цена", lhs.price == rhs.price},
-            {"Вес", lhs.weight == rhs.weight},
-            {"Цвет", lhs.color == rhs.color},
+            {"ID продавца", lhs.seller_id == rhs.seller_id},
+            {"ID категории", lhs.category_id == rhs.category_id},
             {"Количество", lhs.amount == rhs.amount},
         };
+
 
         std::cout << "Сравнение характеристик продуктов:\n";
 
@@ -57,7 +55,7 @@ public:
                 std::cout << field << ": совпадает" << std::endl;
             }
             else {
-                if (field == "Цена" || field == "Вес" || field == "Количество") {
+                if (field == "Цена" || field == "Количество") {
                     std::cout << field << ": " << lhs.name << " (" << lhs.price << ") != " << rhs.name << " (" << rhs.price << ")" << std::endl;
                 }
                 else {
@@ -72,4 +70,3 @@ public:
 };
 
 void comprasionCheck(const Product* first, const Product* second);
-// нормальная схема бд на 3 лабу

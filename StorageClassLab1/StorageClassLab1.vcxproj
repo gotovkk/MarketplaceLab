@@ -133,11 +133,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Product.cpp" />
+    <ClCompile Include="Seller.cpp" />
     <ClCompile Include="Storage.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Product.h" />
+    <ClInclude Include="Seller.h" />
+    <ClInclude Include="SellerManager.h" />
     <ClInclude Include="SQLite\sqlite3.h" />
     <ClInclude Include="Storage.h" />
   </ItemGroup>
