@@ -72,3 +72,4 @@ public:
 };
 
 void comprasionCheck(const Product* first, const Product* second);
+// нормальная схема бд на 3 лабу
