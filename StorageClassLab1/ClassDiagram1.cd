@@ -3,19 +3,55 @@
   <Class Name="Product">
     <Position X="8.75" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAADAAAAAACAQAgIAIAAARAAAAAEgACgAIAMgAAIAAA=</HashCode>
+      <HashCode>ACADAAAAAIEgQAAIIIAAARAAAAAEgAQAABAEAAAAAAA=</HashCode>
       <FileName>Product.h</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Storage">
-    <Position X="7" Y="2.75" Width="1.5" />
+    <Position X="7.25" Y="1.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAIAACAAAAAAAAAAAAAAAAAAEAAAEAAAAgIBAAAAAA=</HashCode>
       <FileName>Storage.h</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="Admin">
+    <Position X="10.5" Y="1" Width="1.5" />
+    <InheritanceLine Type="Seller" FixedFromPoint="true">
+      <Path>
+        <Point X="11.312" Y="3.25" />
+        <Point X="11.312" Y="3.191" />
+        <Point X="11.25" Y="3.191" />
+        <Point X="11.25" Y="3.131" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAQAAAAACAAAAAAAIAAAAEAA=</HashCode>
+      <FileName>Admin.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Seller">
+    <Position X="10.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAGAAAAAAAAAAAEBAEAAAAAAAAAIAgAACAA=</HashCode>
+      <FileName>Seller.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SellerManager">
+    <Position X="5.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAAABAAAAAAAAgAAAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>SellerManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="User">
+    <Position X="5.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAEAAAAAAAABAAAAAAEAAAACAAAAAAAAAgAAEAA=</HashCode>
+      <FileName>User.h</FileName>
+    </TypeIdentifier>
+  </Class>
   <Enum Name="Field">
-    <Position X="7" Y="1.25" Width="1.5" />
+    <Position X="7.25" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAQAAAAAAAAAAAACAACAAAAAAAAAAgAAAAAA=</HashCode>
       <FileName>Storage.h</FileName>
