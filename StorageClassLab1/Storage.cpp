@@ -22,7 +22,8 @@ void Storage::addProduct(std::unique_ptr<Product> product) {
 
 
 
-bool Storage::removeProduct(const string_view name, int seller_id) {
+bool Storage::removeProduct(const std::string_view name, [[maybe_unused]] int seller_id) 
+	{
 	for (auto iter = products.begin(); iter != products.end(); iter++) {
 		if ((*iter)->getName() == name) {
 			products.erase(iter);

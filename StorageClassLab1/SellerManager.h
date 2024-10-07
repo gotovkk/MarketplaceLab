@@ -54,7 +54,7 @@ public:
         return true;
     }
 
-    bool login(sqlite3* db, const std::string& username, const std::string& password) const {
+    bool login(sqlite3* db, const std::string& username, const std::string_view& password) const {
         std::string sqlSelect = "SELECT password FROM sellers WHERE username = ?;";
         sqlite3_stmt* stmt;
 

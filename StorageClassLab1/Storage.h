@@ -22,7 +22,7 @@ public:
 
 
     void addProduct(std::unique_ptr<Product> product);
-    bool removeProduct(const std::string_view name, int seller_id);
+    bool removeProduct(const std::string_view name, [[maybe_unused]] int seller_id);
     void updateProduct(std::string_view name, Field updateField, const std::variant<double, std::string>& value) const;
     void allProductsList() const;
     std::vector<std::unique_ptr<Product>> findLowStockProd(int limit) const;

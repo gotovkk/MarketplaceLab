@@ -8,7 +8,10 @@
 class Seller {
 public:
     std::string username;
+    std::string password;
     int sellerId;
+
+
 
     Seller(const std::string& username, const std::string& password, int sellerId);
     virtual ~Seller() = default;
@@ -18,9 +21,6 @@ public:
 
     virtual void addProduct(Storage& storage, std::unique_ptr<Product> product) const;
     virtual void removeProduct(Storage& storage, int seller_id);
-
-protected:
-    std::string password;
 };
 
 #endif // SELLER_H
