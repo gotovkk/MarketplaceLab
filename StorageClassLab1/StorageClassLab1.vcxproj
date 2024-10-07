@@ -135,6 +135,7 @@
     <ClCompile Include="Admin.cpp" />
     <ClCompile Include="Product.cpp" />
     <ClCompile Include="Seller.cpp" />
+    <ClCompile Include="SellerManager.cpp" />
     <ClCompile Include="Storage.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="User.cpp" />

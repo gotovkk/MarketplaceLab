@@ -28,7 +28,6 @@ public:
     std::vector<std::unique_ptr<Product>> findLowStockProd(int limit) const;
 };
 
-
 void removeProduct(Storage& storage, int seller_id);
 void updateProduct(const Storage& storage);
 void amountChange(const Storage& storage, std::string_view name);
