@@ -133,6 +133,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Admin.cpp" />
+    <ClCompile Include="ErrorManager.cpp" />
     <ClCompile Include="Product.cpp" />
     <ClCompile Include="Seller.cpp" />
     <ClCompile Include="SellerManager.cpp" />
@@ -142,6 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Admin.h" />
+    <ClInclude Include="ErrorManager.h" />
     <ClInclude Include="Product.h" />
     <ClInclude Include="Seller.h" />
     <ClInclude Include="SellerManager.h" />

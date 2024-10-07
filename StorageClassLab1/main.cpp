@@ -3,6 +3,7 @@
 #include <variant>
 #include "Admin.h"
 #include "SellerManager.h"
+#include "ErrorManager.h"
 
 
 int main() {
@@ -29,12 +30,11 @@ int main() {
 
     rc = sqlite3_open(dbPath, &db);
     if (rc != SQLITE_OK) {
-        std::cerr << "Ошибка открытия базы данных: " << sqlite3_errmsg(db) << std::endl;
+        ErrorManager::reportError("Ошибка открытия бд", db);
         return rc;
     }
 
     createTable(db);
-
 
     while (true) {
         std::cout << "\nВыберите действие:\n"
@@ -57,18 +57,18 @@ int main() {
             std::cout << "Введите пароль:\n";
             std::cin >> password;
 
-            if (sellerManager.login(db, login, password)) {
-                std::cout << "Вход выполнен успешно!\n";
-                if (!sellerManager.getSellerIdByUsername(db, login, seller_id)) {
-                    std::cerr << "Ошибка получения ID продавца.\n";
-                    continue;
-                }
+        if (!sellerManager.login(db, login, password)) {
+            ErrorManager::loginError();
+            continue;
+        }
 
-                break; 
+            std::cout << "Вход выполнен успешно!\n";
+
+            if (!sellerManager.getSellerIdByUsername(db, login, seller_id)) {
+                std::cerr << "Ошибка получения ID продавца.\n";
+                continue;  
             }
-            else {
-                std::cerr << "Ошибка входа. Проверьте логин и пароль.\n";
-            }
+
             break;
 
         case 2:
@@ -90,7 +90,7 @@ int main() {
             break;
 
         default:
-            std::cout << "Неверный выбор, попробуйте снова.\n";
+            ErrorManager::choiceError();
             break;
         }
 
@@ -163,7 +163,7 @@ int main() {
                 return 0;
 
             default:
-                std::cout << "Неверный выбор, попробуйте снова." << std::endl;
+                ErrorManager::choiceError();
             }
         }
     }
