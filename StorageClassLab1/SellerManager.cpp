@@ -2,6 +2,7 @@
 #include <sqlite3.h>
 #include <string>
 #include "SellerManager.h"
+#include "ErrorManager.h"
 
 bool SellerManager::registerSeller(sqlite3* db, const std::string& username, const std::string& password, int& seller_id) const {
     const char* sqlCreateTable =
@@ -69,7 +70,7 @@ bool SellerManager::login(sqlite3* db, const std::string& username, const std::s
     }
     sqlite3_finalize(stmt);
 
-    std::cout << "Неверный логин или пароль!" << std::endl;
+    ErrorManager::loginError();
     return false;
 }
 

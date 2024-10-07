@@ -21,3 +21,11 @@ void Admin::login() {
 void Admin::logout() {
     std::cout << "јдминистратор " << Seller::getUsername() << " вышел из системы." << std::endl;
 }
+
+void getLoginPassword(std::string& login, std::string& password)
+{
+    std::cout << "¬ведите логин:\n";
+    std::cin >> login;
+    std::cout << "¬ведите пароль:\n";
+    std::cin >> password;
+}

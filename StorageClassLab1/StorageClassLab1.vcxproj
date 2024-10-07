@@ -144,6 +144,7 @@
   <ItemGroup>
     <ClInclude Include="Admin.h" />
     <ClInclude Include="ErrorManager.h" />
+    <ClInclude Include="main.h" />
     <ClInclude Include="Product.h" />
     <ClInclude Include="Seller.h" />
     <ClInclude Include="SellerManager.h" />

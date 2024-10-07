@@ -4,6 +4,7 @@
 #include "Admin.h"
 #include "SellerManager.h"
 #include "ErrorManager.h"
+#include "main.h"
 
 
 int main() {
@@ -52,10 +53,7 @@ int main() {
 
         switch (choice) {
         case 1:
-            std::cout << "Введите логин:\n";
-            std::cin >> login;
-            std::cout << "Введите пароль:\n";
-            std::cin >> password;
+            getLoginPassword(login, password);
 
         if (!sellerManager.login(db, login, password)) {
             ErrorManager::loginError();
@@ -73,10 +71,7 @@ int main() {
 
         case 2:
             std::cout << "Регистрация нового продавца:\n";
-            std::cout << "Введите логин:\n";
-            std::cin >> login;
-            std::cout << "Введите пароль:\n";
-            std::cin >> password;
+            getLoginPassword(login, password);
 
             if (sellerManager.registerSeller(db, login, password, seller_id)) {
                 std::cout << "Регистрация успешна!\n";
@@ -96,16 +91,16 @@ int main() {
 
 
 		if (login == "admin" || password == "admin") {
-            std::cout << "Добро пожаловать, администратор!\n";
             std::cout << "Введите seller_id: ";
             std::cin >> seller_id;
             currentSeller = std::make_unique<Admin>(login, password, seller_id);
+
+            static_cast<Admin*>(currentSeller.get())->login();
         }
         else {
             currentSeller = std::make_unique<Seller>(login, password, seller_id);
         }
         loadProductsFromDb(db, storage);
-
 
         while (true) {
             std::cout << "\nВыберите действие:\n"

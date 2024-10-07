@@ -1,3 +1,6 @@
+#ifndef ADMIN_H 
+#define ADMIN_H 
+
 #include <iostream>
 #include <string>
 #include "Seller.h"
@@ -8,9 +11,12 @@ class Admin : public Seller, public User {
 public:
     Admin(const std::string& username, const std::string& password, int sellerId);
 
-    void approveSeller([[maybe_unused]]const Storage& storage, [[maybe_unused]] int sellerId) const;
+    void approveSeller([[maybe_unused]] const Storage& storage, [[maybe_unused]] int sellerId) const;
     void removeProduct(Storage& storage, int seller_id) override;
 
     void login() override;
     void logout() override;
 };
+void getLoginPassword(std::string& login, std::string& password);
+
+#endif
