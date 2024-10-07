@@ -29,6 +29,7 @@ public:
     int getSellerId() const;
     int getCategoryId() const;
     void setPrice(double newPrice);
+    void setSellerId(int newId);
     void setAmount(int newAmount);
     void printInfo() const;
 

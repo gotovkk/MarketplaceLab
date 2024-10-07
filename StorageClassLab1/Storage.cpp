@@ -9,6 +9,7 @@ const std::vector<std::unique_ptr<Product>>& Storage::productsList() const
 }
 
 void Storage::addProduct(std::unique_ptr<Product> product) {
+
 	for (const auto& existProduct : products) {
 		if (existProduct->getName() == product->getName() && existProduct->getSellerId() == product->getSellerId()) {
 			int newAmount = existProduct->getAmount() + product->getAmount();
@@ -52,10 +53,7 @@ vector<unique_ptr<Product>> Storage::findLowStockProd(int limit) const {
 	return lowStock;
 }
 
-void removeProduct(Storage& storage) {
-	int seller_id;
-	cout << "Введите ID продавца: ";
-	cin >> seller_id;
+void removeProduct(Storage& storage, int seller_id) {
 	string name;
 	cout << "Введите название продукта для удаления : ";
 	cin >> name;
@@ -244,7 +242,7 @@ void loadProductsFromDb(sqlite3* db, Storage& storage) {
 		}
 	}
 	else {
-		std::cerr << "Failed to prepare statement: " << sqlite3_errmsg(db) << std::endl;
+		std::cerr << "Ошибка: " << sqlite3_errmsg(db) << std::endl;
 	}
 
 	sqlite3_finalize(stmt);

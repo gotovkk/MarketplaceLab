@@ -22,7 +22,13 @@ int Product::getAmount() const {
 }
 
 void Product::setPrice(double newPrice) 
-{ price = newPrice;
+{
+	price = newPrice;
+}
+
+void Product::setSellerId(int newId)
+{
+	seller_id = newId;
 }
 
 void Product::setAmount(int newAmount) {

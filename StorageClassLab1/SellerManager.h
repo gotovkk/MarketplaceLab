@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sqlite3.h>
 #include <string>
+#include "Seller.h"
 
 class SellerManager {
 public:
@@ -13,8 +14,7 @@ public:
             ");";
 
         char* errMsg = nullptr;
-        int rc = sqlite3_exec(db, sqlCreateTable, nullptr, nullptr, &errMsg);
-        if (rc != SQLITE_OK) {
+        if (int rc = sqlite3_exec(db, sqlCreateTable, nullptr, nullptr, &errMsg); rc != SQLITE_OK) {
             std::cerr << "Ошибка при создании таблицы sellers: " << errMsg << std::endl;
             sqlite3_free(errMsg);
             return false;
@@ -33,8 +33,7 @@ public:
         }
         sqlite3_finalize(stmt);
 
-        std::string sqlInsert = "INSERT INTO sellers (username, password) VALUES (?, ?);";
-        if (sqlite3_prepare_v2(db, sqlInsert.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
+        if (std::string sqlInsert = "INSERT INTO sellers (username, password) VALUES (?, ?);"; sqlite3_prepare_v2(db, sqlInsert.c_str(), -1, &stmt, nullptr) == SQLITE_OK) {
             sqlite3_bind_text(stmt, 1, username.c_str(), -1, SQLITE_STATIC);
             sqlite3_bind_text(stmt, 2, password.c_str(), -1, SQLITE_STATIC);
 
@@ -91,5 +90,6 @@ public:
         sqlite3_finalize(stmt);
         return false;
     }
-    
+private:
+    std::vector<Seller> sellers;
 };

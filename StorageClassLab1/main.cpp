@@ -1,8 +1,7 @@
 ﻿#include <iostream>
 #include <vector>
 #include <variant>
-#include "Storage.h"
-#include "Product.h"
+#include "Admin.h"
 #include "SellerManager.h"
 
 
@@ -15,10 +14,11 @@ int main() {
     SellerManager sellerManager;
     std::string password;
     std::string login;
+    std::unique_ptr<Seller> currentSeller = nullptr;
 
     int rc;
     int choice;
-    int seller_id;
+    int seller_id = NULL ;
     std::string firstProductName;
     std::string secondProductName;
     Product const* first = nullptr;
@@ -93,6 +93,17 @@ int main() {
             std::cout << "Неверный выбор, попробуйте снова.\n";
             break;
         }
+
+
+		if (login == "admin" || password == "admin") {
+            std::cout << "Добро пожаловать, администратор!\n";
+            std::cout << "Введите seller_id: ";
+            std::cin >> seller_id;
+            currentSeller = std::make_unique<Admin>(login, password, seller_id);
+        }
+        else {
+            currentSeller = std::make_unique<Seller>(login, password, seller_id);
+        }
         loadProductsFromDb(db, storage);
 
 
@@ -117,7 +128,7 @@ int main() {
 
             case 2:
                 system("cls");
-                removeProduct(storage);
+                currentSeller->removeProduct(storage, seller_id);
                 break;
 
             case 3:
@@ -157,6 +168,5 @@ int main() {
         }
     }
 
-    sqlite3_close(db);
     return 0;
 }
