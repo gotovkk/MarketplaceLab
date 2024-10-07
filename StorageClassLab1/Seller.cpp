@@ -16,7 +16,13 @@ void Seller::addProduct(Storage& storage, std::unique_ptr<Product> product) cons
 }
 
 void Seller::removeProduct(Storage& storage, int seller_id) {
-
     std::cout << "Продавец " << username << " удаляет продукт с ID: " << seller_id << std::endl;
-    removeProduct(storage, seller_id);
+
+    bool removed = storage.removeProduct("Product Name", seller_id);
+    if (removed) {
+        std::cout << "Продукт успешно удален." << std::endl;
+    }
+    else {
+        std::cout << "Не удалось удалить продукт. Возможно, он не найден." << std::endl;
+    }
 }
